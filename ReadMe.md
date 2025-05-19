@@ -9,6 +9,6 @@ the project.  Unfortunately, working with the openCV and Linux proved to be too 
 for the future that can be made on this project.  
 
 Third, the requirements of the project also ask for a SystemC design that mimics the functionality of our onboard design.  The modules mimic the project, with a HDMI_RX 
-input being driven by a driver module, that communicates to the CPU.  From there, the CPU connects to the AXI_Bus which in turn connects to the Memory module.  The memory finally 
-connects to the HDMI_TX module used as our output to the monitor.  Console print statements are provided during each step of the simulation to provide accurate descriptions of 
+input being driven by a driver module, that communicates to the CPU.  From there, the CPU connects to the AXI_Bus which in turn connects to the Memory module, finally 
+connecting to the HDMI_TX module used as our output to the monitor.  Console print statements are provided during each step of the simulation to provide accurate descriptions of 
 what is occurring.
