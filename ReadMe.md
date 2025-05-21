@@ -13,4 +13,4 @@ input being driven by a driver module, that communicates to the CPU.  From there
 connecting to the HDMI_TX module used as our output to the monitor.  Console print statements are provided during each step of the simulation to provide accurate descriptions of 
 what is occurring.
 
-Fourth, the folder named 'design_1' contains more of our work as we tried to come up with solutions on how to tackle inputting a video feed to the board.  The block diagram provided in the folder aimed to link the onboard processor to the diagram so that we could further investigate and familiarize ourselves with it.
+Fourth, the folder named 'PetaLinux' contains more of our work as we tried to come up with solutions on how to tackle inputting a video feed to the board.  The block diagram provided in the folder aimed to link the onboard processor to the diagram so that we could further investigate and familiarize ourselves with it.
