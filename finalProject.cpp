@@ -52,7 +52,7 @@ SC_MODULE(HDMI_RX)
             return;
         }
         std::cout << "HDMI RX: Received pixel data." << std::endl;           // msg sent to console
-        std::cout << "Pixel data: " << *pixel_data << std::endl;             // msg sent to console
+        std::cout << "HDMI_RX: Pixel data: " << *pixel_data << std::endl;             // msg sent to console
         delay += sc_time(10, SC_NS);                                         // 10ns delay to follow LT model
         data_received_event.notify(SC_ZERO_TIME);                            //Tell the CPU data was recieved
         trans.set_response_status(tlm::TLM_OK_RESPONSE);                     // Set successful response
@@ -69,7 +69,7 @@ SC_MODULE(CPU){
     void run(){
         tlm::tlm_generic_payload trans;
         sc_core::sc_time delay = sc_core::SC_ZERO_TIME;                         //Delay
-        std::cout << "Initiator: Sending transaction." << std::endl;            //Msg to console transaction was sent
+        std::cout << "CPU: Sending transaction." << std::endl;            //Msg to console transaction was sent
         socket->b_transport(trans, delay);                                      // send transaction to target
         delay += sc_time(10, SC_NS);                                            // Propagate delay
         if (data_received_event){                                               // Wait for notification from HDMI_RX
@@ -116,23 +116,23 @@ SC_MODULE(Memory){
         unsigned char *data = trans.get_data_ptr();                          // get data pointer from CPU
         unsigned int addr = trans.get_address();                             // get address from CPU
         if (data == nullptr){
-            std::cerr << "Target: Data pointer is null." << std::endl;       // msg sent to console
+            std::cerr << "Memory: Data pointer is null." << std::endl;       // msg sent to console
             trans.set_response_status(tlm::TLM_GENERIC_ERROR_RESPONSE);      // set response status to generic error
             return;
         }
         if (addr >= 256){
-            std::cerr << "Target: Address out of range." << std::endl;       // msg sent to console
+            std::cerr << "Memory: Address out of range." << std::endl;       // msg sent to console
             trans.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);      // set response status to address error
             return;
         }
         if (trans.is_write()){
-            std::cout << "Target: Write transaction received." << std::endl; // msg sent to console
+            std::cout << "Memory: Write transaction received." << std::endl; // msg sent to console
             mem[trans.get_address()] = *data;                                // write data address to mem array to access for write request
-            std::cout << "Data written to memory: " << *data << std::endl;   // msg sent to console
+            std::cout << "Memory: Data written to memory: " << *data << std::endl;   // msg sent to console
         }else{
-            std::cout << "Target: Read transaction received." << std::endl;  // msg sent to console
+            std::cout << "Memory: Read transaction received." << std::endl;  // msg sent to console
             *data = mem[trans.get_address()];                                // read data from mem array after a read request
-            std::cout << "Data read from memory: " << *data << std::endl;    // msg sent to console
+            std::cout << "Memory: Data read from memory: " << *data << std::endl;    // msg sent to console
         }
         delay += sc_time(10, SC_NS);                                         // add a 10 ns delay for simulation
     }
@@ -145,15 +145,15 @@ SC_MODULE(HDMI_TX){
     }
     void run(){
         std::cout << "HDMI_TX: Requesting data from memory at address 0." << std::endl;
-        unsigned char data;                                       // Buffer to store data from memory
         tlm::tlm_generic_payload trans;
         sc_time delay = SC_ZERO_TIME;
         socket->b_transport(trans, delay);                        // Send the transaction to memory for pixel data
+            unsigned char *data = trans.get_data_ptr();           // get data pointer from CPU
         if (trans.get_response_status() != tlm::TLM_OK_RESPONSE){ // Check response status of memory
             std::cerr << "HDMI_TX: Failed to read data" << std::endl;
         } else{
             // Output the data to the console
-            std::cout << "HDMI_TX: Data received from memory = " << static_cast<int>(data) << std::endl;
+            std::cout << "HDMI_TX: Data received from memory = " << *data << std::endl;
         }
         delay += sc_time(10, SC_NS);                               // Propagate delay  
     }
